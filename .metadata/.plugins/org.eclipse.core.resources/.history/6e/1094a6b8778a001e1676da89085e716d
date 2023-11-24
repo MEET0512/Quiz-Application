@@ -1,0 +1,12 @@
+package com.patel.quizservice.model;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
+import lombok.Data;
+
+@Data
+public class QuizDto {
+	 String category; 
+	 Integer numQue; 
+	 String title;
+}

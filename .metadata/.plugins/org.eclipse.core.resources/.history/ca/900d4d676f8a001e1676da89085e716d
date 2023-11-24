@@ -1,0 +1,80 @@
+package com.patel.quizservice.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.patel.quizservice.model.QuestionWrapper;
+import com.patel.quizservice.model.Quiz;
+import com.patel.quizservice.model.Response;
+import com.patel.quizservice.repository.QuizRepository;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class QuizService {
+	final private QuizRepository quizRepo;
+
+	public ResponseEntity<String> createQuiz(String category, Integer numQue, String title) {
+		
+		
+				
+		
+		return new ResponseEntity<>("Success", HttpStatus.CREATED);
+	}
+
+	public ResponseEntity<List<QuestionWrapper>> getQuestionsForQuiz(Integer id) {
+		try {
+			Optional<Quiz> quiz = quizRepo.findById(id);
+			if(quiz.isEmpty()) {
+				return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+			}
+			//List<Question> questions = quiz.get().getQuestions();
+			List<QuestionWrapper> questionsForUser = new ArrayList<>();
+			
+			/*for(Question q: questions) {
+				questionsForUser.add(QuestionWrapper.builder()
+										.id(q.getId())
+										.questionTitle(q.getQuestionTitle())
+										.option1(q.getOption1())
+										.option2(q.getOption2())
+										.option3(q.getOption3())
+										.option4(q.getOption4())
+										.difficultyLevel(q.getDifficultyLevel())
+										.build());
+			}*/
+			return new ResponseEntity<>(questionsForUser, HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+	}
+
+	public ResponseEntity<Integer> getResult(Integer id, List<Response> responses) {
+		Optional<Quiz> quiz = quizRepo.findById(id);
+		if(quiz.isEmpty()) {
+			return new ResponseEntity<>(0, HttpStatus.BAD_REQUEST);
+		}
+		
+		//List<Question> questions = quiz.get().getQuestions();
+		int right = 0;
+		int i =0;
+
+		for(Response res : responses) {
+			
+			/*if(res.getResponse().equals(questions.get(i).getRightAnswer())) {
+				right++;
+			}*/
+			
+			i++;
+		}
+		return new ResponseEntity<>(right, HttpStatus.OK);
+	}
+	
+	
+}

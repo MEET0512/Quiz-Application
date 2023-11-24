@@ -1,0 +1,64 @@
+package com.patel.questionservice.controller;
+
+import java.util.List;
+
+import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.patel.questionservice.model.Question;
+import com.patel.questionservice.model.QuestionWrapper;
+import com.patel.questionservice.model.Response;
+import com.patel.questionservice.service.QuestionService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequestMapping("/question")
+@RequiredArgsConstructor
+public class QuestionController {
+
+	final private QuestionService questionService;
+	
+	final private Environment env;
+	
+	@GetMapping("/allquestions")
+	public ResponseEntity<List<Question>> getAllQuestions() {
+		return questionService.getAllQuestions();
+	}
+	
+	@GetMapping("category/{category}")
+	public ResponseEntity<List<Question>> getQuestionsByCategory(@PathVariable("category") String Category){
+		return questionService.getQuestionsByCategory(Category.toUpperCase());
+	}
+	
+	@PostMapping("/add")
+	public ResponseEntity<String> addNewQuestion(@RequestBody List<Question> questions) {
+		return questionService.addQuestion(questions);
+	}
+	
+	//Generate questions for quiz
+	@GetMapping("/generate")
+	public ResponseEntity<List<Integer>> generateQuestionsForQuiz(@RequestParam String Category,@RequestParam int numQuestions) {
+		return questionService.generateQuizQuestions(Category, numQuestions);
+	}
+	
+	//Get questions for particular quiz 
+	@PostMapping("/getQuestions")
+	public ResponseEntity<List<QuestionWrapper>> getQuestionsForQuiz(@RequestBody List<Integer> questionIds) {
+		System.out.println(env.getProperty("local.server.port"));
+		return questionService.getQuestions(questionIds);
+	}
+	
+	//Calculate the quiz score
+	@PostMapping("/getScore")
+	public ResponseEntity<Integer> getScoreOfQuiz(@RequestBody List<Response> responses) {
+		return questionService.getScore(responses);
+	}
+}

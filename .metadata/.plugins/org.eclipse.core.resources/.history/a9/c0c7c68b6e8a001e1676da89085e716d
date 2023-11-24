@@ -1,0 +1,8 @@
+package com.patel.quizservice.feign;
+
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+@EnableFeignClients
+public interface Configuration {
+
+}

@@ -1,0 +1,5 @@
+package com.patel.quizservice.model;
+
+public class QuizDto {
+
+}
